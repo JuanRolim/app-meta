@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<title>Metas Anuais</title>
+<style>
+  :root {
+    --bg: #f6f8fb;
+    --surface: #ffffff;
+    --surface-2: #f8fafc;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --primary: #4f46e5;
+    --primary-2: #4338ca;
+    --primary-soft: #eef2ff;
+    --success: #16a34a;
+    --success-soft: #ecfdf3;
+    --warning: #d97706;
+    --warning-soft: #fff7ed;
+    --danger: #dc2626;
+    --danger-soft: #fef2f2;
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05), 0 4px 14px rgba(15, 23, 42, 0.04);
+    --shadow-lg: 0 18px 60px rgba(15, 23, 42, 0.18);
+    --radius: 18px;
+    --radius-sm: 12px;
+    --max: 1120px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(circle at top left, rgba(99,102,241,.09), transparent 28rem),
+      var(--bg);
+    min-height: 100vh;
+  }
+  button, input, textarea, select { font: inherit; }
+  button { cursor: pointer; }
+  .app-shell { width: min(100% - 28px, var(--max)); margin: 0 auto; padding: 26px 0 54px; }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 22px;
+  }
+  .brand { display: flex; align-items: center; gap: 13px; }
+  .brand-mark {
+    width: 44px; height: 44px; border-radius: 14px; display:grid; place-items:center;
+    color: #fff; background: linear-gradient(135deg, var(--primary), #7c3aed); box-shadow: 0 10px 24px rgba(79,70,229,.25);
+    font-size: 20px;
+  }
+  .brand h1 { font-size: 22px; line-height: 1.1; margin: 0; letter-spacing: -.03em; }
+  .brand p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  .actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+  .btn {
+    border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 11px;
+    min-height: 42px; padding: 0 14px; font-weight: 700; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    transition: .18s ease; box-shadow: 0 1px 1px rgba(15,23,42,.02);
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+  .btn:active { transform: translateY(0); }
+  .btn-primary { background: var(--primary); color:#fff; border-color: var(--primary); }
+  .btn-primary:hover { background: var(--primary-2); }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--muted); box-shadow:none; }
+  .btn-danger { background: var(--danger-soft); color: var(--danger); border-color: #fecaca; }
+  .btn-small { min-height: 34px; padding: 0 10px; font-size: 13px; border-radius: 9px; }
+  .hero {
+    background: rgba(255,255,255,.82); border: 1px solid rgba(226,232,240,.85); border-radius: 24px; padding: 24px;
+    box-shadow: var(--shadow-sm); backdrop-filter: blur(10px); margin-bottom: 16px;
+  }
+  .hero-head { display:flex; justify-content:space-between; gap: 20px; align-items:flex-start; }
+  .hero h2 { margin:0; font-size: clamp(26px, 4vw, 38px); letter-spacing:-.045em; }
+  .hero-sub { color: var(--muted); margin: 8px 0 0; font-size: 15px; }
+  .hero-year { color: var(--primary); font-weight:800; }
+  .summary-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin-top:20px; }
+  .stat { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px; }
+  .stat-label { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.06em; font-weight:800; }
+  .stat-value { margin-top:6px; font-size:25px; font-weight:800; letter-spacing:-.04em; }
+  .progress-wrap { margin-top: 18px; }
+  .progress-row { display:flex; justify-content:space-between; gap:10px; align-items:center; margin-bottom:8px; }
+  .progress-label { font-size:13px; font-weight:800; }
+  .progress-percent { color:var(--primary); font-weight:800; }
+  .progress { height: 10px; background:#e8edf5; border-radius:999px; overflow:hidden; }
+  .progress-bar { height:100%; width:0%; background: linear-gradient(90deg, var(--primary), #7c3aed); border-radius:999px; transition: width .35s ease; }
+  .toolbar {
+    display:flex; gap:10px; align-items:center; justify-content:space-between; margin: 16px 0; flex-wrap:wrap;
+  }
+  .filter-row { display:flex; gap:7px; flex-wrap:wrap; }
+  .chip {
+    border:1px solid var(--border); background:var(--surface); color:var(--muted); padding:8px 12px; border-radius:999px; font-size:13px; font-weight:800;
+  }
+  .chip.active { background:var(--primary-soft); color:var(--primary-2); border-color:#c7d2fe; }
+  .filter-select { min-height: 38px; border:1px solid var(--border); border-radius:10px; background:var(--surface); color:var(--text); padding:0 12px; font-weight:700; }
+  .list { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:14px; }
+  .empty {
+    grid-column:1/-1; background:var(--surface); border:1px dashed #cbd5e1; border-radius:18px; padding:42px 20px; text-align:center;
+  }
+  .empty-icon { font-size:34px; }
+  .empty h3 { margin:10px 0 6px; font-size:19px; }
+  .empty p { margin:0 auto 18px; max-width:500px; color:var(--muted); line-height:1.55; }
+  .goal-card {
+    background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:17px; box-shadow:var(--shadow-sm);
+    transition:.18s ease; display:flex; flex-direction:column; min-width:0; position:relative; overflow:hidden;
+  }
+  .goal-card:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(15,23,42,.08); }
+  .goal-card.completed { background: linear-gradient(180deg,#fff,#f6fff9); border-color:#bbf7d0; }
+  .goal-top { display:flex; align-items:flex-start; gap:12px; }
+  .check {
+    width:24px; height:24px; flex:0 0 24px; border:2px solid #cbd5e1; border-radius:8px; background:#fff; display:grid; place-items:center;
+    color:#fff; transition:.18s ease; margin-top:1px;
+  }
+  .check:hover { border-color:var(--primary); }
+  .check.checked { background:var(--success); border-color:var(--success); }
+  .check span { opacity:0; transform:scale(.5); transition:.16s ease; }
+  .check.checked span { opacity:1; transform:scale(1); }
+  .goal-main { min-width:0; flex:1; }
+  .goal-title { margin:0; font-size:17px; line-height:1.25; letter-spacing:-.02em; overflow-wrap:anywhere; }
+  .goal-card.completed .goal-title { text-decoration:line-through; color:#64748b; }
+  .meta-line { display:flex; gap:7px; align-items:center; flex-wrap:wrap; margin-top:8px; }
+  .tag { display:inline-flex; align-items:center; min-height:25px; padding:0 8px; border-radius:999px; background:var(--primary-soft); color:var(--primary-2); font-size:11px; font-weight:800; }
+  .tag.status-done { background:var(--success-soft); color:#15803d; }
+  .tag.status-pending { background:var(--warning-soft); color:#b45309; }
+  .due { color:var(--muted); font-size:12px; }
+  .goal-desc { color:var(--muted); line-height:1.55; font-size:13px; margin:13px 0 0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .card-footer { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:15px; padding-top:12px; border-top:1px solid #eef2f7; }
+  .card-footer .update-count { color:var(--muted); font-size:12px; }
+  .link-btn { border:0; background:none; color:var(--primary); font-weight:800; font-size:12px; padding:5px 0; }
+  .backup-bar { margin-top:16px; display:flex; justify-content:space-between; gap:12px; align-items:center; color:var(--muted); font-size:12px; }
+  .backup-actions { display:flex; gap:8px; flex-wrap:wrap; }
+
+  .modal-backdrop {
+    position:fixed; inset:0; background:rgba(15,23,42,.52); display:none; align-items:center; justify-content:center; padding:18px; z-index:50; backdrop-filter:blur(4px);
+  }
+  .modal-backdrop.open { display:flex; animation:fadeIn .16s ease; }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .modal {
+    width:min(100%, 720px); max-height:calc(100vh - 36px); overflow:auto; background:var(--surface); border-radius:22px; box-shadow:var(--shadow-lg); border:1px solid #e2e8f0;
+  }
+  .modal.large { width:min(100%, 860px); }
+  .modal-head { position:sticky; top:0; z-index:2; background:rgba(255,255,255,.95); backdrop-filter:blur(8px); display:flex; justify-content:space-between; gap:12px; align-items:center; padding:18px 20px; border-bottom:1px solid var(--border); }
+  .modal-head h3 { margin:0; font-size:18px; letter-spacing:-.03em; }
+  .icon-btn { width:38px; height:38px; border-radius:10px; border:1px solid var(--border); background:var(--surface); display:grid; place-items:center; color:var(--muted); }
+  .modal-body { padding:20px; }
+  .form-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px; }
+  .field { display:flex; flex-direction:column; gap:6px; }
+  .field.full { grid-column:1/-1; }
+  label { font-size:12px; font-weight:800; color:#334155; }
+  input, textarea, select { width:100%; border:1px solid #cbd5e1; background:#fff; color:var(--text); border-radius:11px; padding:11px 12px; outline:none; transition:.16s ease; }
+  textarea { min-height:110px; resize:vertical; line-height:1.5; }
+  input:focus, textarea:focus, select:focus { border-color:#818cf8; box-shadow:0 0 0 4px rgba(99,102,241,.1); }
+  .modal-actions { display:flex; justify-content:flex-end; gap:10px; padding:16px 20px; border-top:1px solid var(--border); }
+  .detail-top { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; }
+  .detail-title { margin:0; font-size:25px; line-height:1.2; letter-spacing:-.04em; }
+  .detail-desc { margin:10px 0 0; color:var(--muted); line-height:1.6; white-space:pre-wrap; }
+  .detail-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:16px; }
+  .detail-item { background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:12px; }
+  .detail-item .k { display:block; color:var(--muted); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; }
+  .detail-item .v { display:block; margin-top:4px; font-size:13px; font-weight:800; }
+  .notes-box { background:#fbfdff; border:1px solid var(--border); border-radius:14px; padding:14px; margin-top:16px; }
+  .section-title { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px; }
+  .section-title h4 { margin:0; font-size:14px; }
+  .notes-text { color:#475569; font-size:13px; line-height:1.6; white-space:pre-wrap; }
+  .timeline { margin-top:16px; display:flex; flex-direction:column; gap:10px; }
+  .timeline-item { position:relative; border-left:2px solid #dbe3ef; padding:0 0 8px 16px; }
+  .timeline-dot { position:absolute; left:-6px; top:3px; width:10px; height:10px; border-radius:50%; background:var(--primary); box-shadow:0 0 0 4px #eef2ff; }
+  .timeline-head { display:flex; justify-content:space-between; gap:10px; align-items:flex-start; }
+  .timeline-date { color:var(--primary-2); font-size:12px; font-weight:800; }
+  .timeline-text { color:#475569; font-size:13px; line-height:1.55; white-space:pre-wrap; margin-top:4px; }
+  .timeline-actions { display:flex; gap:6px; margin-top:6px; }
+  .danger-zone { border:1px solid #fecaca; background:var(--danger-soft); border-radius:14px; padding:14px; margin-top:18px; }
+  .danger-zone p { margin:0 0 8px; color:#991b1b; font-size:12px; line-height:1.5; }
+  .confirm-body { padding:22px 20px; }
+  .confirm-body p { margin:0; color:var(--muted); line-height:1.6; }
+  .toast-stack { position:fixed; top:18px; right:18px; z-index:100; display:flex; flex-direction:column; gap:9px; width:min(360px, calc(100vw - 36px)); }
+  .toast { background:#0f172a; color:#fff; border-radius:12px; padding:12px 14px; box-shadow:var(--shadow-lg); font-size:13px; display:flex; gap:10px; align-items:flex-start; animation:toastIn .18s ease; }
+  .toast.success { background:#14532d; }
+  .toast.error { background:#7f1d1d; }
+  @keyframes toastIn { from{opacity:0; transform:translateY(-8px)} to{opacity:1; transform:translateY(0)} }
+  .hidden { display:none !important; }
+  .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+  @media (max-width: 820px) {
+    .list { grid-template-columns:1fr; }
+    .summary-grid { grid-template-columns:repeat(2,1fr); }
+    .hero-head { flex-direction:column; }
+    .form-grid { grid-template-columns:1fr; }
+    .field.full { grid-column:auto; }
+    .detail-grid { grid-template-columns:1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .app-shell { width:min(100% - 18px, var(--max)); padding-top:14px; }
+    .topbar { align-items:flex-start; }
+    .brand h1 { font-size:19px; }
+    .brand-mark { width:40px; height:40px; }
+    .actions { width:100%; justify-content:stretch; }
+    .actions .btn { flex:1; }
+    .hero { padding:17px; border-radius:18px; }
+    .summary-grid { gap:8px; }
+    .stat { padding:11px; }
+    .stat-value { font-size:21px; }
+    .toolbar { align-items:stretch; }
+    .filter-row { width:100%; }
+    .filter-row .chip { flex:1; }
+    .filter-select { width:100%; }
+    .modal-backdrop { padding:0; }
+    .modal { width:100%; height:100%; max-height:100%; border-radius:0; }
+    .modal-head { padding:14px 16px; }
+    .modal-body { padding:16px; }
+    .modal-actions { padding:13px 16px; }
+    .detail-top { flex-direction:column; }
+    .detail-grid { grid-template-columns:1fr; }
+    .backup-bar { flex-direction:column; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">✓</div>
+      <div>
+        <h1>Metas Anuais</h1>
+        <p>Seu ano, suas prioridades, um passo de cada vez.</p>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="exportBtn" type="button">↥ Exportar</button>
+      <button class="btn" id="importBtn" type="button">↧ Importar</button>
+      <button class="btn btn-primary" id="newGoalBtn" type="button">＋ Nova Meta</button>
+      <input class="hidden" type="file" id="importInput" accept="application/json,.json">
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="dashboardTitle">
+      <div class="hero-head">
+        <div>
+          <h2 id="dashboardTitle">Minhas Metas — <span id="yearLabel"></span></h2>
+          <p class="hero-sub" id="summaryText">Carregando suas metas…</p>
+        </div>
+        <span class="tag" id="demoBadge" style="display:none">Dados de exemplo</span>
+      </div>
+      <div class="summary-grid">
+        <div class="stat"><div class="stat-label">Metas</div><div class="stat-value" id="totalStat">0</div></div>
+        <div class="stat"><div class="stat-label">Concluídas</div><div class="stat-value" id="doneStat">0</div></div>
+        <div class="stat"><div class="stat-label">Pendentes</div><div class="stat-value" id="pendingStat">0</div></div>
+        <div class="stat"><div class="stat-label">Conclusão</div><div class="stat-value" id="percentStat">0%</div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-row"><span class="progress-label">Progresso anual</span><span class="progress-percent" id="progressPercent">0%</span></div>
+        <div class="progress" aria-label="Progresso geral das metas"><div class="progress-bar" id="progressBar"></div></div>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="Filtros">
+      <div class="filter-row" role="group" aria-label="Status">
+        <button class="chip active" data-status="all" type="button">Todas</button>
+        <button class="chip" data-status="pending" type="button">Pendentes</button>
+        <button class="chip" data-status="done" type="button">Concluídas</button>
+      </div>
+      <select class="filter-select" id="categoryFilter" aria-label="Filtrar por categoria">
+        <option value="all">Todas as categorias</option>
+      </select>
+    </section>
+
+    <section class="list" id="goalsList" aria-live="polite"></section>
+
+    <div class="backup-bar">
+      <span>Os dados ficam salvos neste navegador. Faça um backup JSON periodicamente.</span>
+      <div class="backup-actions">
+        <button class="btn btn-small" id="clearExamplesBtn" type="button">Remover dados de exemplo</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Goal form modal -->
+<div class="modal-backdrop" id="goalFormModal" role="dialog" aria-modal="true" aria-labelledby="goalFormTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="goalFormTitle">Nova meta</h3>
+      <button class="icon-btn" data-close="goalFormModal" type="button" aria-label="Fechar">✕</button>
+    </div>
+    <form id="goalForm">
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="field full">
+            <label for="goalTitle">Nome da meta *</label>
+            <input id="goalTitle" name="title" required maxlength="120" placeholder="Ex.: Melhorar meu inglês">
+          </div>
+          <div class="field">
+            <label for="goalCategory">Categoria *</label>
+            <input id="goalCategory" name="category" required maxlength="50" list="categoryOptions" placeholder="Ex.: Estudos">
+            <datalist id="categoryOptions">
+              <option value="Estudos"><option value="Carreira"><option value="Finanças"><option value="Saúde"><option value="Relacionamentos"><option value="Projetos"><option value="Pessoal">
+            </datalist>
+          </div>
+          <div class="field">
+            <label for="goalYear">Ano *</label>
+            <input id="goalYear" name="year" type="number" min="2000" max="2200" required>
+          </div>
+          <div class="field">
+            <label for="goalStart">Data de início *</label>
+            <input id="goalStart" name="startDate" type="date" required>
+          </div>
+          <div class="field">
+            <label for="goalDue">Prazo / data limite (opcional)</label>
+            <input id="goalDue" name="dueDate" type="date">
+          </div>
+          <div class="field full">
+            <label for="goalDescription">Descrição</label>
+            <textarea id="goalDescription" name="description" maxlength="1000" placeholder="Descreva o que você quer alcançar e por quê."></textarea>
+          </div>
+          <div class="field full">
+            <label for="goalNotes">Observações iniciais</label>
+            <textarea id="goalNotes" name="notes" maxlength="3000" placeholder="Estratégia, referências, próximos passos…"></textarea>
+          </div>
+          <div class="field">
+            <label for="goalCompleted">Status</label>
+            <select id="goalCompleted" name="completed">
+              <option value="false">Pendente</option>
+              <option value="true">Concluída</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" type="button" data-close="goalFormModal">Cancelar</button>
+        <button class="btn btn-primary" type="submit">Salvar meta</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Goal details modal -->
+<div class="modal-backdrop" id="detailsModal" role="dialog" aria-modal="true" aria-labelledby="detailsTitle">
+  <div class="modal large">
+    <div class="modal-head">
+      <h3>Detalhes da meta</h3>
+      <button class="icon-btn" data-close="detailsModal" type="button" aria-label="Fechar">✕</button>
+    </div>
+    <div class="modal-body" id="detailsBody"></div>
+  </div>
+</div>
+
+<!-- Update modal -->
+<div class="modal-backdrop" id="updateModal" role="dialog" aria-modal="true" aria-labelledby="updateTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="updateTitle">Adicionar acompanhamento</h3>
+      <button class="icon-btn" data-close="updateModal" type="button" aria-label="Fechar">✕</button>
+    </div>
+    <form id="updateForm">
+      <div class="modal-body">
+        <input type="hidden" id="updateId">
+        <div class="form-grid">
+          <div class="field">
+            <label for="updateDate">Data *</label>
+            <input id="updateDate" type="date" required>
+          </div>
+          <div class="field full">
+            <label for="updateText">Acompanhamento *</label>
+            <textarea id="updateText" maxlength="3000" required placeholder="O que você fez? O que evoluiu? O que aprendeu?"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" type="button" data-close="updateModal">Cancelar</button>
+        <button class="btn btn-primary" type="submit">Salvar acompanhamento</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Confirm modal -->
+<div class="modal-backdrop" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-head"><h3 id="confirmTitle">Confirmar ação</h3><button class="icon-btn" data-close="confirmModal" type="button" aria-label="Fechar">✕</button></div>
+    <div class="confirm-body"><p id="confirmText"></p></div>
+    <div class="modal-actions"><button class="btn" type="button" data-close="confirmModal">Cancelar</button><button class="btn btn-danger" id="confirmBtn" type="button">Confirmar</button></div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+<script>
+(() => {
+  'use strict';
+
+  const STORAGE_KEY = 'metas-anuais-v1';
+  const DEMO_KEY = 'metas-anuais-demo-v1';
+  const CURRENT_YEAR = new Date().getFullYear();
+  let state = { goals: [], demoLoaded: false };
+  let filters = { status: 'all', category: 'all' };
+  let editingGoalId = null;
+  let detailsGoalId = null;
+  let updateGoalId = null;
+  let confirmAction = null;
+
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+
+  const els = {
+    yearLabel: $('#yearLabel'), summaryText: $('#summaryText'), totalStat: $('#totalStat'), doneStat: $('#doneStat'), pendingStat: $('#pendingStat'),
+    percentStat: $('#percentStat'), progressPercent: $('#progressPercent'), progressBar: $('#progressBar'), goalsList: $('#goalsList'),
+    categoryFilter: $('#categoryFilter'), demoBadge: $('#demoBadge'),
+    goalFormModal: $('#goalFormModal'), goalFormTitle: $('#goalFormTitle'), goalForm: $('#goalForm'),
+    goalTitle: $('#goalTitle'), goalCategory: $('#goalCategory'), goalYear: $('#goalYear'), goalStart: $('#goalStart'), goalDue: $('#goalDue'), goalDescription: $('#goalDescription'), goalNotes: $('#goalNotes'), goalCompleted: $('#goalCompleted'),
+    detailsModal: $('#detailsModal'), detailsBody: $('#detailsBody'),
+    updateModal: $('#updateModal'), updateForm: $('#updateForm'), updateTitle: $('#updateTitle'), updateId: $('#updateId'), updateDate: $('#updateDate'), updateText: $('#updateText'),
+    confirmModal: $('#confirmModal'), confirmText: $('#confirmText'), confirmBtn: $('#confirmBtn'), toastStack: $('#toastStack'),
+    importInput: $('#importInput')
+  };
+
+  function uid(prefix = 'id') {
+    return prefix + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+  }
+
+  function todayISO() { return new Date().toISOString().slice(0,10); }
+
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[char]));
+  }
+
+  function formatDate(value) {
+    if (!value) return 'Sem prazo';
+    const [y,m,d] = String(value).split('-');
+    if (!y || !m || !d) return value;
+    return new Intl.DateTimeFormat('pt-BR', { day:'2-digit', month:'short', year:'numeric' }).format(new Date(Number(y), Number(m)-1, Number(d))).replace('.', '');
+  }
+
+  function normalizeGoal(raw) {
+    const updates = Array.isArray(raw.updates) ? raw.updates : [];
+    return {
+      id: String(raw.id || uid('goal')),
+      year: Number(raw.year) || CURRENT_YEAR,
+      title: String(raw.title || 'Meta sem título').trim().slice(0,120),
+      category: String(raw.category || 'Pessoal').trim().slice(0,50),
+      description: String(raw.description || '').slice(0,1000),
+      startDate: /^\d{4}-\d{2}-\d{2}$/.test(String(raw.startDate)) ? raw.startDate : todayISO(),
+      dueDate: /^\d{4}-\d{2}-\d{2}$/.test(String(raw.dueDate || '')) ? raw.dueDate : '',
+      completed: Boolean(raw.completed),
+      notes: String(raw.notes || '').slice(0,3000),
+      updates: updates.map(u => ({ id:String(u.id || uid('update')), date:/^\d{4}-\d{2}-\d{2}$/.test(String(u.date)) ? u.date : todayISO(), text:String(u.text || '').slice(0,3000) })).filter(u => u.text.trim())
+    };
+  }
+
+  function demoGoals() {
+    return [
+      normalizeGoal({ id:uid('goal'), year:CURRENT_YEAR, title:'Melhorar meu inglês', category:'Estudos', description:'Alcançar um nível de conversação mais confortável em inglês.', startDate:`${CURRENT_YEAR}-01-10`, dueDate:`${CURRENT_YEAR}-12-31`, completed:false, notes:'Praticar um pouco todos os dias e registrar a evolução.', updates:[
+        { id:uid('update'), date:`${CURRENT_YEAR}-09-21`, text:'Comecei uma rotina de 30 minutos por dia com foco em listening e conversação.' },
+        { id:uid('update'), date:`${CURRENT_YEAR}-09-28`, text:'Fiz duas sessões de conversação e anotei palavras novas para revisar.' }
+      ]}),
+      normalizeGoal({ id:uid('goal'), year:CURRENT_YEAR, title:'Montar uma reserva financeira', category:'Finanças', description:'Construir uma reserva para aumentar minha segurança financeira.', startDate:`${CURRENT_YEAR}-01-05`, dueDate:`${CURRENT_YEAR}-12-20`, completed:false, notes:'Automatizar aportes mensais e acompanhar a evolução.', updates:[] }),
+      normalizeGoal({ id:uid('goal'), year:CURRENT_YEAR, title:'Concluir uma formação importante', category:'Carreira', description:'Finalizar uma etapa de formação e consolidar o aprendizado.', startDate:`${CURRENT_YEAR}-03-01`, dueDate:`${CURRENT_YEAR}-09-30`, completed:true, notes:'Meta concluída. Registrar próximos aprendizados.', updates:[
+        { id:uid('update'), date:`${CURRENT_YEAR}-09-30`, text:'Etapa concluída. Agora vou organizar o que aprendi e definir o próximo objetivo.' }
+      ]}),
+      normalizeGoal({ id:uid('goal'), year:CURRENT_YEAR, title:'Manter uma rotina de atividade física', category:'Saúde', description:'Criar constância semanal e acompanhar meu progresso ao longo do ano.', startDate:`${CURRENT_YEAR}-02-01`, dueDate:`${CURRENT_YEAR}-12-31`, completed:false, notes:'Priorizar consistência em vez de intensidade.' , updates:[]})
+    ];
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const demoFlag = localStorage.getItem(DEMO_KEY) === '1';
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        state.goals = Array.isArray(parsed.goals) ? parsed.goals.map(normalizeGoal) : [];
+        state.demoLoaded = demoFlag;
+      } else {
+        state.goals = demoGoals();
+        state.demoLoaded = true;
+        persist();
+        localStorage.setItem(DEMO_KEY, '1');
+      }
+    } catch (err) {
+      console.error('Erro ao carregar dados:', err);
+      state = { goals: demoGoals(), demoLoaded: true };
+      persist();
+      toast('Os dados locais estavam indisponíveis. Foram carregados dados de exemplo.', 'error');
+    }
+  }
+
+  function persist() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ version:1, goals:state.goals }));
+      localStorage.setItem(DEMO_KEY, state.demoLoaded ? '1' : '0');
+      return true;
+    } catch (err) {
+      console.error('Erro ao salvar dados:', err);
+      toast('Não foi possível salvar os dados no navegador.', 'error');
+      return false;
+    }
+  }
+
+  function toast(message, type='') {
+    const item = document.createElement('div'); item.className = `toast ${type}`; item.textContent = message;
+    els.toastStack.appendChild(item);
+    setTimeout(() => item.remove(), 3000);
+  }
+
+  function getGoalsForYear() { return state.goals.filter(g => g.year === CURRENT_YEAR); }
+
+  function renderSummary() {
+    const goals = getGoalsForYear();
+    const total = goals.length, done = goals.filter(g => g.completed).length, pending = total - done;
+    const percent = total ? Math.round(done / total * 100) : 0;
+    els.yearLabel.textContent = CURRENT_YEAR;
+    els.totalStat.textContent = total;
+    els.doneStat.textContent = done;
+    els.pendingStat.textContent = pending;
+    els.percentStat.textContent = `${percent}%`;
+    els.progressPercent.textContent = `${percent}%`;
+    els.progressBar.style.width = `${percent}%`;
+    els.summaryText.textContent = `${total} ${total === 1 ? 'meta' : 'metas'} | ${done} concluída${done === 1 ? '' : 's'} | ${pending} pendente${pending === 1 ? '' : 's'}`;
+    els.demoBadge.style.display = state.demoLoaded ? 'inline-flex' : 'none';
+  }
+
+  function renderCategoryFilter() {
+    const categories = [...new Set(getGoalsForYear().map(g => g.category).filter(Boolean))].sort((a,b) => a.localeCompare(b, 'pt-BR'));
+    const current = filters.category;
+    els.categoryFilter.innerHTML = `<option value="all">Todas as categorias</option>` + categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+    if (categories.includes(current)) els.categoryFilter.value = current;
+    else { filters.category = 'all'; els.categoryFilter.value = 'all'; }
+  }
+
+  function filteredGoals() {
+    return getGoalsForYear().filter(g => {
+      const statusOk = filters.status === 'all' || (filters.status === 'done' ? g.completed : !g.completed);
+      const categoryOk = filters.category === 'all' || g.category === filters.category;
+      return statusOk && categoryOk;
+    }).sort((a,b) => {
+      if (a.completed !== b.completed) return a.completed ? 1 : -1;
+      if (a.dueDate && b.dueDate) return a.dueDate.localeCompare(b.dueDate);
+      if (a.dueDate) return -1;
+      if (b.dueDate) return 1;
+      return a.title.localeCompare(b.title, 'pt-BR');
+    });
+  }
+
+  function renderGoals() {
+    const goals = filteredGoals();
+    if (!goals.length) {
+      els.goalsList.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">◎</div>
+          <h3>Nenhuma meta encontrada</h3>
+          <p>Cadastre sua primeira meta ou ajuste os filtros para visualizar outras metas.</p>
+          <button class="btn btn-primary" type="button" id="emptyNewGoalBtn">＋ Nova Meta</button>
+        </div>`;
+      $('#emptyNewGoalBtn')?.addEventListener('click', () => openGoalForm());
+      return;
+    }
+    els.goalsList.innerHTML = goals.map(goal => {
+      const statusClass = goal.completed ? 'status-done' : 'status-pending';
+      const statusText = goal.completed ? 'Concluída' : 'Pendente';
+      const updates = goal.updates.length;
+      return `
+        <article class="goal-card ${goal.completed ? 'completed' : ''}" data-id="${escapeHtml(goal.id)}">
+          <div class="goal-top">
+            <button class="check ${goal.completed ? 'checked' : ''}" data-action="toggle" data-id="${escapeHtml(goal.id)}" type="button" aria-label="${goal.completed ? 'Desmarcar' : 'Marcar'} meta como concluída" aria-pressed="${goal.completed}"><span>✓</span></button>
+            <div class="goal-main">
+              <h3 class="goal-title">${escapeHtml(goal.title)}</h3>
+              <div class="meta-line"><span class="tag">${escapeHtml(goal.category)}</span><span class="tag ${statusClass}">${statusText}</span>${goal.dueDate ? `<span class="due">Prazo: ${escapeHtml(formatDate(goal.dueDate))}</span>` : ''}</div>
+              <p class="goal-desc">${escapeHtml(goal.description || 'Sem descrição.')}</p>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="update-count">${updates} ${updates === 1 ? 'acompanhamento' : 'acompanhamentos'}</span>
+            <button class="link-btn" data-action="details" data-id="${escapeHtml(goal.id)}" type="button">Ver detalhes →</button>
+          </div>
+        </article>`;
+    }).join('');
+  }
+
+  function render() { renderSummary(); renderCategoryFilter(); renderGoals(); }
+
+  function openModal(modal) { modal.classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeModal(modal) { modal.classList.remove('open'); if (!$('.modal-backdrop.open')) document.body.style.overflow=''; }
+
+  function openGoalForm(goalId = null) {
+    editingGoalId = goalId;
+    els.goalForm.reset();
+    els.goalFormTitle.textContent = goalId ? 'Editar meta' : 'Nova meta';
+    if (goalId) {
+      const goal = state.goals.find(g => g.id === goalId); if (!goal) return;
+      els.goalTitle.value = goal.title;
+      els.goalCategory.value = goal.category;
+      els.goalYear.value = goal.year;
+      els.goalStart.value = goal.startDate;
+      els.goalDue.value = goal.dueDate;
+      els.goalDescription.value = goal.description;
+      els.goalNotes.value = goal.notes;
+      els.goalCompleted.value = String(goal.completed);
+    } else {
+      els.goalYear.value = CURRENT_YEAR;
+      els.goalStart.value = todayISO();
+      els.goalCompleted.value = 'false';
+    }
+    openModal(els.goalFormModal);
+    setTimeout(() => els.goalTitle.focus(), 40);
+  }
+
+  function openDetails(goalId) {
+    const goal = state.goals.find(g => g.id === goalId); if (!goal) return;
+    detailsGoalId = goalId;
+    renderDetails();
+    openModal(els.detailsModal);
+  }
+
+  function renderDetails() {
+    const goal = state.goals.find(g => g.id === detailsGoalId); if (!goal) return;
+    const updates = [...goal.updates].sort((a,b) => b.date.localeCompare(a.date));
+    els.detailsBody.innerHTML = `
+      <div class="detail-top">
+        <div>
+          <div class="meta-line" style="margin-top:0"><span class="tag">${escapeHtml(goal.category)}</span><span class="tag ${goal.completed ? 'status-done':'status-pending'}">${goal.completed ? 'Concluída':'Pendente'}</span></div>
+          <h2 class="detail-title" id="detailsTitle">${escapeHtml(goal.title)}</h2>
+          <p class="detail-desc">${escapeHtml(goal.description || 'Sem descrição.')}</p>
+        </div>
+        <button class="btn btn-primary btn-small" type="button" data-detail-action="toggle">${goal.completed ? '↶ Reabrir meta' : '✓ Concluir meta'}</button>
+      </div>
+      <div class="detail-grid">
+        <div class="detail-item"><span class="k">Ano</span><span class="v">${goal.year}</span></div>
+        <div class="detail-item"><span class="k">Início</span><span class="v">${escapeHtml(formatDate(goal.startDate))}</span></div>
+        <div class="detail-item"><span class="k">Prazo</span><span class="v">${escapeHtml(formatDate(goal.dueDate))}</span></div>
+      </div>
+      <div class="notes-box">
+        <div class="section-title"><h4>Observações</h4><button class="btn btn-small" type="button" data-detail-action="edit">Editar meta</button></div>
+        <div class="notes-text">${escapeHtml(goal.notes || 'Nenhuma observação registrada.')}</div>
+      </div>
+      <div class="notes-box">
+        <div class="section-title"><h4>Histórico de acompanhamento</h4><button class="btn btn-small btn-primary" type="button" data-detail-action="add-update">＋ Adicionar acompanhamento</button></div>
+        ${updates.length ? `<div class="timeline">${updates.map(u => `
+          <div class="timeline-item">
+            <span class="timeline-dot"></span>
+            <div class="timeline-head"><span class="timeline-date">${escapeHtml(formatDate(u.date))}</span></div>
+            <div class="timeline-text">${escapeHtml(u.text)}</div>
+            <div class="timeline-actions"><button class="btn btn-small" type="button" data-detail-action="edit-update" data-update-id="${escapeHtml(u.id)}">Editar</button><button class="btn btn-small btn-danger" type="button" data-detail-action="delete-update" data-update-id="${escapeHtml(u.id)}">Excluir</button></div>
+          </div>`).join('')}</div>` : `<p class="notes-text">Ainda não há registros. Use o botão acima para registrar sua evolução.</p>`}
+      </div>
+      <div class="danger-zone">
+        <p>Excluir esta meta remove também todo o histórico de acompanhamento salvo nela.</p>
+        <button class="btn btn-danger btn-small" type="button" data-detail-action="delete-goal">Excluir meta</button>
+      </div>`;
+  }
+
+  function openUpdateForm(goalId, updateId = null) {
+    const goal = state.goals.find(g => g.id === goalId); if (!goal) return;
+    updateGoalId = goalId;
+    els.updateForm.reset();
+    els.updateId.value = updateId || '';
+    if (updateId) {
+      const update = goal.updates.find(u => u.id === updateId); if (!update) return;
+      els.updateTitle.textContent = 'Editar acompanhamento';
+      els.updateDate.value = update.date;
+      els.updateText.value = update.text;
+    } else {
+      els.updateTitle.textContent = 'Adicionar acompanhamento';
+      els.updateDate.value = todayISO();
+    }
+    openModal(els.updateModal);
+    setTimeout(() => els.updateText.focus(), 40);
+  }
+
+  function askConfirm(text, action) {
+    els.confirmText.textContent = text;
+    confirmAction = action;
+    openModal(els.confirmModal);
+  }
+
+  function toggleGoal(goalId) {
+    const goal = state.goals.find(g => g.id === goalId); if (!goal) return;
+    goal.completed = !goal.completed;
+    state.demoLoaded = false;
+    persist(); render();
+    if (detailsGoalId === goalId && els.detailsModal.classList.contains('open')) renderDetails();
+    toast(goal.completed ? 'Meta marcada como concluída.' : 'Meta reaberta.', 'success');
+  }
+
+  function deleteGoal(goalId) {
+    askConfirm('Tem certeza que deseja excluir esta meta? Essa ação não poderá ser desfeita.', () => {
+      state.goals = state.goals.filter(g => g.id !== goalId);
+      state.demoLoaded = false;
+      persist(); render();
+      closeModal(els.confirmModal);
+      closeModal(els.detailsModal);
+      detailsGoalId = null;
+      toast('Meta excluída.', 'success');
+    });
+  }
+
+  function deleteUpdate(goalId, updateId) {
+    askConfirm('Excluir este registro de acompanhamento? Essa ação não poderá ser desfeita.', () => {
+      const goal = state.goals.find(g => g.id === goalId); if (!goal) return;
+      goal.updates = goal.updates.filter(u => u.id !== updateId);
+      state.demoLoaded = false;
+      persist(); render(); renderDetails(); closeModal(els.confirmModal); toast('Acompanhamento excluído.', 'success');
+    });
+  }
+
+  function exportData() {
+    const payload = { app:'Metas Anuais', version:1, exportedAt:new Date().toISOString(), goals:state.goals };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `metas-anuais-${CURRENT_YEAR}.json`; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    toast('Backup exportado com sucesso.', 'success');
+  }
+
+  function importData(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result);
+        const rawGoals = Array.isArray(parsed) ? parsed : parsed.goals;
+        if (!Array.isArray(rawGoals)) throw new Error('Formato inválido');
+        const cleaned = rawGoals.map(normalizeGoal).filter(g => g.title.trim());
+        if (!cleaned.length && rawGoals.length) throw new Error('Nenhuma meta válida encontrada');
+        askConfirm(`Importar ${cleaned.length} ${cleaned.length === 1 ? 'meta' : 'metas'} e substituir os dados atuais? Faça um backup antes, se necessário.`, () => {
+          state.goals = cleaned; state.demoLoaded = false; persist(); render(); closeModal(els.confirmModal); toast('Backup importado com sucesso.', 'success');
+        });
+      } catch (err) {
+        console.error(err);
+        toast('Arquivo JSON inválido ou incompatível.', 'error');
+      } finally { els.importInput.value = ''; }
+    };
+    reader.readAsText(file);
+  }
+
+  els.goalForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const data = new FormData(els.goalForm);
+    const payload = {
+      title: String(data.get('title') || '').trim(), category:String(data.get('category') || '').trim(), year:Number(data.get('year')),
+      startDate:String(data.get('startDate') || ''), dueDate:String(data.get('dueDate') || ''), description:String(data.get('description') || '').trim(),
+      notes:String(data.get('notes') || '').trim(), completed:data.get('completed') === 'true'
+    };
+    if (!payload.title || !payload.category || !payload.year || !payload.startDate) return;
+    if (payload.dueDate && payload.dueDate < payload.startDate) { toast('O prazo não pode ser anterior à data de início.', 'error'); return; }
+    if (editingGoalId) {
+      const goal = state.goals.find(g => g.id === editingGoalId); if (!goal) return;
+      Object.assign(goal, payload);
+      state.demoLoaded = false; persist(); render();
+      closeModal(els.goalFormModal); if (detailsGoalId === goal.id && els.detailsModal.classList.contains('open')) renderDetails();
+      toast('Meta atualizada.', 'success');
+    } else {
+      if (state.demoLoaded) state.goals = [];
+      state.goals.push(normalizeGoal({ id:uid('goal'), ...payload, updates:[] }));
+      state.demoLoaded = false; persist(); render(); closeModal(els.goalFormModal); toast('Meta criada com sucesso.', 'success');
+    }
+  });
+
+  els.updateForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const goal = state.goals.find(g => g.id === updateGoalId); if (!goal) return;
+    const date = els.updateDate.value; const text = els.updateText.value.trim();
+    if (!date || !text) return;
+    if (els.updateId.value) {
+      const u = goal.updates.find(x => x.id === els.updateId.value); if (u) { u.date = date; u.text = text; }
+      toast('Acompanhamento atualizado.', 'success');
+    } else {
+      goal.updates.push({ id:uid('update'), date, text });
+      toast('Acompanhamento adicionado.', 'success');
+    }
+    state.demoLoaded = false; persist(); render(); renderDetails(); closeModal(els.updateModal);
+  });
+
+  els.confirmBtn.addEventListener('click', () => { const fn = confirmAction; confirmAction = null; if (fn) fn(); });
+  $('#newGoalBtn').addEventListener('click', () => openGoalForm());
+  $('#exportBtn').addEventListener('click', exportData);
+  $('#importBtn').addEventListener('click', () => els.importInput.click());
+  els.importInput.addEventListener('change', (e) => { const file=e.target.files?.[0]; if (file) importData(file); });
+  $('#clearExamplesBtn').addEventListener('click', () => {
+    const hasReal = state.goals.some(g => g.year === CURRENT_YEAR) && !state.demoLoaded;
+    if (!state.demoLoaded) { toast(hasReal ? 'Os dados de exemplo já foram removidos.' : 'Nenhum dado de exemplo para remover.'); return; }
+    askConfirm('Remover os dados de exemplo e deixar o aplicativo vazio?', () => {
+      state.goals = []; state.demoLoaded = false; persist(); render(); closeModal(els.confirmModal); toast('Dados de exemplo removidos.', 'success');
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    const closeId = e.target.closest('[data-close]')?.dataset.close; if (closeId) { closeModal($('#'+closeId)); return; }
+    const statusBtn = e.target.closest('[data-status]');
+    if (statusBtn) { filters.status = statusBtn.dataset.status; $$('.chip').forEach(b => b.classList.toggle('active', b.dataset.status === filters.status)); renderGoals(); return; }
+    const action = e.target.closest('[data-action]');
+    if (action) {
+      const id = action.dataset.id;
+      if (action.dataset.action === 'toggle') toggleGoal(id);
+      if (action.dataset.action === 'details') openDetails(id);
+      return;
+    }
+    const detailAction = e.target.closest('[data-detail-action]');
+    if (detailAction) {
+      const actionName = detailAction.dataset.detailAction;
+      if (!detailsGoalId) return;
+      if (actionName === 'toggle') toggleGoal(detailsGoalId);
+      if (actionName === 'edit') openGoalForm(detailsGoalId);
+      if (actionName === 'add-update') openUpdateForm(detailsGoalId);
+      if (actionName === 'edit-update') openUpdateForm(detailsGoalId, detailAction.dataset.updateId);
+      if (actionName === 'delete-update') deleteUpdate(detailsGoalId, detailAction.dataset.updateId);
+      if (actionName === 'delete-goal') deleteGoal(detailsGoalId);
+      return;
+    }
+    if (e.target.classList.contains('modal-backdrop') && e.target.classList.contains('open')) closeModal(e.target);
+  });
+
+  els.categoryFilter.addEventListener('change', (e) => { filters.category = e.target.value; renderGoals(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      const open = [...$$('.modal-backdrop.open')].reverse()[0]; if (open) closeModal(open);
+    }
+  });
+
+  window.addEventListener('error', e => console.error('Erro global:', e.error || e.message));
+  window.addEventListener('unhandledrejection', e => console.error('Promise rejeitada:', e.reason));
+
+  loadState(); render();
+})();
+</script>
+</body>
+</html>
